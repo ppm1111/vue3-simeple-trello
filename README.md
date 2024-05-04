@@ -11,7 +11,13 @@
 - **card management**: add、edit、delete cards
 - **list management**: add、delete、rename lists
   - rename title by clicking title
-- **multiple tags**: add tags by editing cards. comma-separated string.
+- **multiple tags**: add tags by editing cards. comma-separated string. support tags keyword
+  - requirement-changes
+  - halfway-done
+  - test
+  - re-test
+  - waiting-for-test
+  - done
 - **realtime json update**: all changes made to lists and cards are immediately reflected in the JSON data structure.
 
 ## Project Setup
