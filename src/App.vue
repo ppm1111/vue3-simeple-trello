@@ -2,77 +2,84 @@
 import { ref, reactive } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 
+// Data for the board
 const data = ref([
   {
     'title': 'Todo',
     'cards': [
-      { name: 'Task 1', tags: ['測試', '變更需求']},
-      { name: 'Task 2', tags: ['變更需求', '完成一半'] },
+      { name: 'Task 1', tags: ['requirement-changes', 'halfway-done']},
+      { name: 'Task 2', tags: ['done', 'waiting-for-test'] },
       { name: 'Task 3', tags: [] }
     ]
   },
   {
     'title': 'Doing',
     'cards': [
-      { name: 'Task 4', tags: ['待測試', '測試'] },
-      { name: 'Task 5', tags: ['完成一半', '變更需求'] }
+      { name: 'Task 4', tags: ['test', 'halfway-done'] },
+      { name: 'Task 5', tags: ['done', 'test'] }
     ]
   },
   {
     'title': 'Done',
     'cards': [
-      { name: 'Task 6', tags: ['測試', '完成'] }
+      { name: 'Task 6', tags: ['requirement-changes', 're-test'] }
     ]
   }
 ])
 
-function onUpdate() {
-  console.log('update')
-}
-function onAdd() {
-  console.log('add')
-}
-function remove() {
-  console.log('remove')
-}
+// list functions
 function addList() {
   data.value.push({
     'title': 'New List',
     'cards': []
   })
 }
+function removeList(index) {
+  data.value.splice(index, 1);
+}
+
+// card functions
 function addCard(index) {
   data.value[index]['cards'].push({
     name: 'New Task',
     tags: []
   })
 }
+function removeCard(listIndex, cardIndex) {
+  data.value[listIndex].cards.splice(cardIndex, 1);
+}
+
+// tags color
 function getTagColor(name, tag) {
-  if (name == '測試') {
+  if (name == 'test') {
     return '#008080';
   }
-  if (name == '變更需求') {
+  if (name == 'requirement-changes') {
       return '#800000';
   }
-  if (name == '重新測試') {
+  if (name == 're-test') {
       return '#8a2be2';
   }
-  if (name == '完成') {
+  if (name == 'done') {
       return '#ccff00';
   }
-  if (name == '完成一半') {
+  if (name == 'halfway-done') {
       return '#1a4480';
   }
-  if (name == '待測試') {
+  if (name == 'waiting-for-test') {
       return '#391d0c';
   }
   return '#e1e1e1';
 }
+
+// init data
 const editStates = ref(data.value.map(() => false))
 const showDialog = ref(false)
 const currentCard = reactive({ name: '', tags: [] })
 let currentListIndex = ref(-1)
 let currentItemIndex = ref(-1)
+
+// dialog functions
 function openEditDialog(item, listIndex, itemIndex) {
   currentCard.name = item.name
   currentCard.tags = item.tags.join(',');
@@ -94,7 +101,7 @@ function closeDialog() {
 </script>
 
 <template>
-  <button @click="addList" class="add-list-button">+ Add another list</button>
+  <button @click="addList" class="add-list-button">+ Add List</button>
   <VueDraggable v-model="data" class="board">
     <div v-for="(list, index) in data" :key="index" class="list">
       <div class="list-header-container">
@@ -112,15 +119,15 @@ function closeDialog() {
           @blur="editStates[index] = false"
           @keyup.enter="editStates[index] = false"
         />
-        <button @click="addCard(index)" class="add-card-button">+ Add Card</button>
+        <span>
+          <button @click="addCard(index)" class="add-card-button">+ Add Card</button>
+          <button @click="removeList(index)" class="delete-list-button">Delete List</button>
+        </span>
       </div>
       <VueDraggable
         v-model="data[index]['cards']"
         class="cards"
         group="people"
-        @update="onUpdate"
-        @add="onAdd"
-        @remove="remove"
       >
         <div
           v-for="(item, itemIndex) in data[index]['cards']"
@@ -128,6 +135,7 @@ function closeDialog() {
           class="card"
           @click="openEditDialog(item, index, itemIndex)"
         >
+          <button @click.stop="removeCard(index, itemIndex)" class="delete-card-button">X</button>
           {{ item.name }}
           <div class="card-tags">
             <span v-for="tag in item.tags" :style="{ backgroundColor: getTagColor(tag) }" :key="tag" class="tag">{{ tag }}</span>
@@ -171,6 +179,7 @@ function closeDialog() {
 }
 
 .list-header-input {
+  width:100px;
   font-size: 16px;
   font-weight: bold;
   flex-grow: 1;
@@ -184,6 +193,15 @@ function closeDialog() {
   border: none;
   border-radius: 3px;
   cursor: pointer;
+}
+.delete-list-button {
+  padding: 5px 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-left: 10px;
 }
 
 .board {
@@ -210,6 +228,7 @@ function closeDialog() {
 }
 
 .card {
+  position: relative;
   background-color: #fff;
   border-radius: 3px;
   padding: 10px;
@@ -313,5 +332,17 @@ function closeDialog() {
 
 .button:hover {
   background-color: #0056b3;
+}
+.delete-card-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 2px 5px;
+  background-color: #ff6347; /* Tomato red */
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
 }
 </style>
