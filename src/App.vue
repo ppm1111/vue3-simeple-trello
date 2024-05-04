@@ -7,7 +7,7 @@ const data = ref([
   {
     'title': 'Todo',
     'cards': [
-      { name: 'Task 1', tags: ['requirement-changes', 'halfway-done']},
+      { name: 'Task 1', tags: ['requirement-changes', 'halfway-done', 'test', 're-test', 'waiting-for-test', 'done']},
       { name: 'Task 2', tags: ['done', 'waiting-for-test'] },
       { name: 'Task 3', tags: [] }
     ]
@@ -52,22 +52,22 @@ function removeCard(listIndex, cardIndex) {
 // tags color
 function getTagColor(name, tag) {
   if (name == 'test') {
-    return '#008080';
+    return '#065535';
   }
   if (name == 'requirement-changes') {
-      return '#800000';
+      return '#003366';
   }
   if (name == 're-test') {
-      return '#8a2be2';
+      return '#b29600';
   }
   if (name == 'done') {
-      return '#ccff00';
+      return '#800000';
   }
   if (name == 'halfway-done') {
-      return '#1a4480';
+      return '#800080';
   }
   if (name == 'waiting-for-test') {
-      return '#391d0c';
+      return '#088da5';
   }
   return '#e1e1e1';
 }
