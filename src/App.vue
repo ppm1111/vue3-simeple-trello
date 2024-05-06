@@ -176,6 +176,8 @@ function closeDialog() {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+  width: 100px;
+  word-wrap: break-word;
 }
 
 .list-header-input {
@@ -248,6 +250,7 @@ function closeDialog() {
   border-radius: 3px;
   padding: 2px 5px;
   font-size: 12px;
+  color: white;
 }
 .add-list-button {
   height: 40px;
